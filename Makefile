@@ -1,6 +1,6 @@
 BUILD_DIR = ./build
-CFLAGS = -O3 -Wall -Wextra -pedantic --std=c11 `pkg-config --cflags gtk+-3.0`
-LDFLAGS = `pkg-config --libs gtk+-3.0` 
+CFLAGS = -O3 -Wall -Wextra -pedantic --std=c11 `pkg-config --cflags x11` `pkg-config --cflags xfixes`
+LDFLAGS = `pkg-config --libs x11` `pkg-config --libs xfixes`
 
 all: x-selection-sync
 

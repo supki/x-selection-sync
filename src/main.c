@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/Xfixes.h>
@@ -90,6 +91,9 @@ static void selection_notify_event(XFixesSelectionNotifyEvent* ev) {
   if (window != ev->owner) {
     XConvertSelection(display, ev->selection, XA_UTF8_STRING, ev->selection, window, CurrentTime);
     XSync(display, true);
+
+    struct timespec ts = {.tv_sec = 0, .tv_nsec = 100 * 1000 * 1000};
+    nanosleep(&ts, NULL);
 
     buf_size = get_window_property(ev->selection, &buf);
 

@@ -97,8 +97,7 @@ static void selection_notify_event(XFixesSelectionNotifyEvent* ev) {
 
     buf_size = get_window_property(ev->selection, &buf);
 
-    set_selection_owner(XA_PRIMARY);
-    set_selection_owner(XA_CLIPBOARD);
+    set_selection_owner(ev->selection == XA_PRIMARY ? XA_CLIPBOARD : XA_PRIMARY);
   }
 }
 

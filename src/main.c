@@ -111,10 +111,12 @@ static unsigned long get_window_property(Atom property, unsigned char** data) {
   unsigned long nitems;
   __auto_type offset = 0;
   unsigned long bytes_left;
+  unsigned char* dummy;
 
-  XGetWindowProperty(display, window, property, offset, 0, false, AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_left, data);
+  XGetWindowProperty(display, window, property, offset, 0, false, AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_left, &dummy);
 
   if (bytes_left > 0) {
+    XFree(dummy);
     cleanup();
 
     XGetWindowProperty(display, window, property, offset, bytes_left, false, AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_left, data);

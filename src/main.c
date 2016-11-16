@@ -24,6 +24,7 @@ int xfixes_error_base;
 
 unsigned char* buf = NULL;
 unsigned int buf_size = 0;
+unsigned int CONVERTION_DELAY_NS = 100 * 1000 * 1000;
 
 int main(int argc, char** argv) {
   (void)argc;
@@ -92,7 +93,7 @@ static void selection_notify_event(XFixesSelectionNotifyEvent* ev) {
     XConvertSelection(display, ev->selection, XA_UTF8_STRING, ev->selection, window, CurrentTime);
     XSync(display, true);
 
-    struct timespec ts = {.tv_sec = 0, .tv_nsec = 100 * 1000 * 1000};
+    struct timespec ts = {.tv_sec = 0, .tv_nsec = CONVERTION_DELAY_NS};
     nanosleep(&ts, NULL);
 
     buf_size = get_window_property(ev->selection, &buf);

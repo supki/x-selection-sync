@@ -24,6 +24,8 @@ int xfixes_error_base;
 
 unsigned char* buf = NULL;
 unsigned int buf_size = 0;
+Time last_event_at = CurrentTime;
+unsigned int BETWEEN_EVENTS_DELAY_MS = 100;
 unsigned int CONVERTION_DELAY_NS = 100 * 1000 * 1000;
 
 int main(int argc, char** argv) {
@@ -89,7 +91,7 @@ static void selection_request_event(XEvent* in) {
 }
 
 static void selection_notify_event(XFixesSelectionNotifyEvent* ev) {
-  if (window != ev->owner) {
+  if (window != ev->owner && ev->selection_timestamp > last_event_at + BETWEEN_EVENTS_DELAY_MS) {
     XConvertSelection(display, ev->selection, XA_UTF8_STRING, ev->selection, window, CurrentTime);
     XSync(display, true);
 
@@ -97,6 +99,7 @@ static void selection_notify_event(XFixesSelectionNotifyEvent* ev) {
     nanosleep(&ts, NULL);
 
     buf_size = get_window_property(ev->selection, &buf);
+    last_event_at = ev->timestamp;
 
     set_selection_owner(ev->selection == XA_PRIMARY ? XA_CLIPBOARD : XA_PRIMARY);
   }
